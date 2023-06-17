@@ -3,6 +3,7 @@ import './App.css'
 
 function Input({ setElement, element }) {
   const handleKeyDown = (e) => {
+    if (e.target.value.trim() == '') return
     if (e.key === 'Enter') {
       let newElement = [...element, { content: e.target.value, checked: false, isEditing: false }]
       setElement(newElement)
@@ -37,12 +38,19 @@ function List({ list, setElement }) {
   }
 
   const handleSubmitUpdate = (e, index) => {
-    console.log(e.target.value);
+    if (e.target.value.trim() == '') {
+      return
+    }
     if (e.key == 'Enter') {
       newList[index].content = e.target.value
-      setElement(newList)
       newList[index].isEditing = false
+      setElement(newList)
     }
+  }
+
+  const handleExit = (e, index) => {
+    newList[index].isEditing = false
+    setElement(newList)
   }
 
   return (
@@ -56,8 +64,15 @@ function List({ list, setElement }) {
                   onKeyDown={e => handleSubmitUpdate(e, index)}
                   defaultValue={element.content}
                   title='Enter to submit'
-                  style={{ display: 'block' }}
+                // style={{ display: 'block' }}
                 />
+                <span
+                  style={{ fontSize: 26, marginLeft: 5, cursor: 'pointer' }}
+                  onClick={e => handleExit(e, index)}
+                  title={'Click here to exit'}
+                >
+                  x
+                </span>
                 <hr />
               </React.Fragment>
             ) : (
